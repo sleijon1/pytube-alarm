@@ -1,18 +1,17 @@
 from datetime import datetime, timedelta
 from playsound import playsound
+import webbrowser
 
 class Alarm:
     """ alarm class """
     timer_hours = None
     timer_minutes = None
     timer_seconds = None
-    play_youtube = False
 
-    def __init__(self, hours=0, minutes=0, seconds=0, youtube=False):
+    def __init__(self, hours=0, minutes=0, seconds=0):
         self.timer_hours = hours
         self.timer_minutes = minutes
         self.timer_seconds = seconds
-        self.play_youtube = youtube
 
     def start_timer(self, url=None):
         """ Starts timer using timer_minutes
@@ -27,17 +26,16 @@ class Alarm:
         end_time = start_time + delta
         end_time = end_time.replace(microsecond=0)
         while True:
+            print(datetime.now().replace(microsecond=0), end_time)
             # misses equality since it loops too slowly
             if datetime.now().replace(microsecond=0) == end_time:
-                if not self.play_youtube:
+                if url is None:
                     playsound('default.mp3')
                 else:
-                    # play youtube link by opening browser or
-                    # download it and name it and play from file
-                    youtube_url = url
-                    pass
+                    webbrowser.register('chrome', None, webbrowser.BackgroundBrowser("C:/Program Files (x86)//Google//Chrome//Application//chrome.exe"))
+                    webbrowser.get('chrome').open_new(url)
+                    break
 
 
-
-alarm = Alarm(seconds=5)
-alarm.start_timer()
+alarm = Alarm(seconds=2)
+alarm.start_timer('https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley')
