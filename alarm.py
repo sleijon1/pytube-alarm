@@ -34,8 +34,8 @@ class Alarm:
                 else:
                     webbrowser.register('chrome', None, webbrowser.BackgroundBrowser("C:/Program Files (x86)//Google//Chrome//Application//chrome.exe"))
                     webbrowser.get('chrome').open_new(url)
-                    break
+                break
 
 
-alarm = Alarm(seconds=2)
-alarm.start_timer('https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley')
+#alarm = Alarm(seconds=2)
+#alarm.start_timer('https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley')

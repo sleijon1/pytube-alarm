@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-
+from alarm import Alarm
 
 class GUI:
     window = None
@@ -13,13 +13,14 @@ class GUI:
     button = None
     
     def __init__(self):
+        """ initiates gui objects ready to be placed """
         self.window = tk.Tk()
         self.minutes_entry = tk.Entry(master=self.window)
         self.seconds_entry = tk.Entry(master=self.window)
         self.url_entry = tk.Entry(master=self.window)
         self.url_label = tk.Label(
             master=self.window,
-            text="url to open",
+            text="url to open when time is up",
             fg="black",
         )
         self.minutes_label = tk.Label(
@@ -42,6 +43,7 @@ class GUI:
         )
 
     def initiate_tk_window(self):
+        """ places gui objects on grid and starts tk window loop """
         self.minutes_entry.grid(row=1, column=0, padx=5, pady=5, sticky='nsew')
         self.minutes_label.grid(row=0, column=0, padx=5, pady=5, sticky='nsew')
         self.seconds_entry.grid(row=1, column=1, padx=5, pady=5, sticky='nsew')
@@ -57,6 +59,8 @@ class GUI:
         self.window.mainloop()
 
     def user_submit(self):
+        """ receive user input and check that its reasonable giving user feedback
+        via prompts """
         minutes = self.minutes_entry.get()
         seconds = self.seconds_entry.get()
         url = self.url_entry.get()
@@ -71,8 +75,8 @@ class GUI:
             no_input_error = True
         else:
             try:
-                minutes = int(minutes)
-                seconds = int(seconds)
+                minutes = int(minutes) if minutes != '' else 0
+                seconds = int(seconds) if seconds != '' else 0 
             except ValueError:
                 no_integer_error = True
         if 'youtube' not in url:
@@ -88,8 +92,8 @@ class GUI:
             confirm_url = messagebox.askquestion(title='WeirdUrlDude', message='Are you sure your alarm is suppose to be this weird url?')
         
         if confirm_url == 'yes' or confirm_url is None:
-            # run backend
-            pass
+            alarm = Alarm(minutes=minutes, seconds=seconds)
+            alarm.start_timer(url=url)
         else:
             return
         print(minutes, seconds, url)    
