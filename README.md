@@ -5,4 +5,4 @@ Do you need to motivate yourself with a celebratory youtube video at the end of 
 Then this super advanced youtube alarm is for you.
 
 ## Instructions to run:
-python3w gui.py (duhh)
+python3 gui.py 
