@@ -1,20 +1,18 @@
 import tkinter as tk
 from tkinter import messagebox
 from alarm import Alarm
+from time import sleep
+import threading
 
 class GUI:
-    window = None
-    minutes_entry = None
-    seconds_entry = None
-    url_entry = None
-    url_label = None
-    minutes_label = None
-    seconds_label = None
-    button = None
-    
     def __init__(self):
-        """ initiates gui objects ready to be placed """
         self.window = tk.Tk()
+        self.initiate_main_gui()
+        self.initiate_tk_window()
+        self.window.mainloop()
+    
+    def initiate_main_gui(self):
+        """ initiates gui objects ready to be placed """
         self.minutes_entry = tk.Entry(master=self.window)
         self.seconds_entry = tk.Entry(master=self.window)
         self.url_entry = tk.Entry(master=self.window)
@@ -42,6 +40,17 @@ class GUI:
             command=self.user_submit,
         )
 
+    def initiate_time_window(self):
+        self.time_window = tk.Toplevel(self.window)
+        self.time_left_label = tk.Label(
+            master=self.time_window,
+            text="Hello, Tkinter",
+            fg="blue",
+            bg="black",
+            font=("Courier", 35)
+        )
+        self.time_left_label.pack(fill=tk.BOTH)
+
     def initiate_tk_window(self):
         """ places gui objects on grid and starts tk window loop """
         self.minutes_entry.grid(row=1, column=0, padx=5, pady=5, sticky='nsew')
@@ -55,8 +64,6 @@ class GUI:
 
         self.window.columnconfigure([0, 1], weight=1, minsize=50)
         self.window.rowconfigure([0, 1, 2, 3], weight=1, minsize=20)
-
-        self.window.mainloop()
 
     def user_submit(self):
         """ receive user input and check that its reasonable giving user feedback
@@ -93,10 +100,26 @@ class GUI:
         
         if confirm_url == 'yes' or confirm_url is None:
             alarm = Alarm(minutes=minutes, seconds=seconds)
-            alarm.start_timer(url=url)
+            self.window.withdraw()
+            self.initiate_time_window()
+            alarm_thread = threading.Thread(target=alarm.start_timer, args=(self, url,))
+            alarm_thread.start()
         else:
             return
-        print(minutes, seconds, url)    
+    
+    def update_time(self, time_left, minutes=False):
+        if time_left <= 0:
+            self.time_left_label["text"] = '0'
+            self.time_window.destroy()
+            self.window.deiconify()
+        else:
+            # set time left
+            if minutes == True:
+                self.time_left_label["text"] = str(time_left) + " min"
+            else:
+                self.time_left_label["text"] = str(time_left)
 
-gui = GUI()
-gui.initiate_tk_window()
+
+
+if __name__ == '__main__':
+    gui = GUI()
